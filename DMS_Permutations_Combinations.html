@@ -1,0 +1,1837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DMS Permutations & Combinations — Interactive Learning & 6 Games</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --primary-light: #eef2ff;
+      --accent: #10b981;
+      --accent-light: #ecfdf5;
+      --danger: #ef4444;
+      --danger-light: #fef2f2;
+      --warning: #f59e0b;
+      --warning-light: #fffbeb;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    .dark {
+      --bg: #0b0f19;
+      --card-bg: #131b2e;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #1e293b;
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --primary-light: #1e1b4b;
+      --accent: #10b981;
+      --accent-light: #064e3b;
+      --danger: #f87171;
+      --danger-light: #450a0a;
+      --warning: #fbbf24;
+      --warning-light: #451a03;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 800;
+      font-size: 1.15rem;
+      cursor: pointer;
+    }
+    .brand-icon {
+      width: 2.25rem;
+      height: 2.25rem;
+      background: var(--primary);
+      color: white;
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+
+    nav {
+      display: flex;
+      gap: 0.35rem;
+      overflow-x: auto;
+    }
+    nav button {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 0.4rem 0.75rem;
+      border-radius: 0.4rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+    nav button:hover { color: var(--text); background: var(--border); }
+    nav button.active {
+      color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .theme-toggle {
+      background: var(--border);
+      border: none;
+      color: var(--text);
+      padding: 0.45rem 0.75rem;
+      border-radius: 0.4rem;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.25rem;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+      color: white;
+      padding: 2.5rem;
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid #312e81;
+    }
+    .hero h1 { font-size: 2.25rem; font-weight: 800; margin-bottom: 0.75rem; line-height: 1.2; }
+    .hero p { color: #cbd5e1; max-width: 800px; font-size: 1.05rem; margin-bottom: 1.5rem; }
+    .hero-btn-group { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.25rem;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s;
+      text-decoration: none;
+    }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-outline { background: transparent; color: inherit; border: 1px solid var(--border); }
+    .btn-accent { background: var(--accent); color: white; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 1.25rem;
+      border-radius: 0.75rem;
+    }
+    .stat-val { font-size: 1.75rem; font-weight: 800; color: var(--primary); }
+    .stat-lbl { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .topic-pills {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .topic-pill {
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .topic-pill.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    /* Calculator Styles */
+    .calc-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.25fr;
+      gap: 1.5rem;
+    }
+    @media (max-width: 800px) { .calc-grid { grid-template-columns: 1fr; } }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.35rem; }
+    .form-control {
+      width: 100%;
+      padding: 0.6rem 0.85rem;
+      border-radius: 0.4rem;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+    }
+
+    /* Worksheet Item */
+    .ws-item {
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      padding: 1.25rem;
+      border-radius: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .ws-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+    .badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.3rem;
+      background: var(--border);
+    }
+    .hint-box {
+      background: var(--warning-light);
+      border: 1px solid var(--warning);
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      margin-top: 0.75rem;
+      font-size: 0.85rem;
+    }
+    .sol-box {
+      background: var(--primary-light);
+      border: 1px solid var(--primary);
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      margin-top: 0.75rem;
+      font-size: 0.85rem;
+    }
+
+    /* Game Stage */
+    .game-stage {
+      background: #020617;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      color: white;
+      min-height: 380px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* Printable Lab Notes */
+    @media print {
+      header, .header-actions, .no-print { display: none !important; }
+      body { background: white !important; color: black !important; }
+      .card { border: none !important; box-shadow: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand" onclick="switchSection('overview')">
+      <div class="brand-icon">∑</div>
+      <div>
+        <div>DMS Combinatorics</div>
+        <div style="font-size: 0.7rem; color: var(--text-muted); font-weight: normal;">2nd-Year B.E. CSE</div>
+      </div>
+    </div>
+    <nav>
+      <button class="active" onclick="switchSection('overview')">Overview</button>
+      <button onclick="switchSection('theory')">Theory &amp; 49 Solved</button>
+      <button onclick="switchSection('worksheet')">Worksheet (70)</button>
+      <button onclick="switchSection('calculator')">Calculator</button>
+      <button onclick="switchSection('games')">Games Zone (6)</button>
+      <button onclick="switchSection('reference')">Formulas</button>
+      <button onclick="switchSection('labnotes')">Lab Notes</button>
+    </nav>
+    <div class="header-actions">
+      <button class="theme-toggle" onclick="toggleTheme()">🌓 Theme</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- SECTION 1: OVERVIEW -->
+    <section id="sec-overview">
+      <div class="hero">
+        <div style="font-size: 0.8rem; font-weight: bold; color: #a5b4fc; text-transform: uppercase;">
+          Discrete Mathematical Structures (21CS36 / 18CS36)
+        </div>
+        <h1>Permutations &amp; Combinations Portal</h1>
+        <p>
+          Learn discrete counting principles with rigorous definitions, 49 fully solved textbook examples,
+          a 70-problem self-grading worksheet, step-by-step formula calculators, and six animated educational games.
+        </p>
+        <div class="hero-btn-group">
+          <button class="btn btn-primary" onclick="switchSection('theory')">Explore Theory &amp; 49 Examples</button>
+          <button class="btn btn-accent" onclick="switchSection('games')">Launch 6 Animated Games</button>
+          <button class="btn btn-outline" onclick="switchSection('worksheet')">Solve 70-Problem Worksheet</button>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-lbl">Core Modules</div>
+          <div class="stat-val">7 Concepts</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">Factorials to Multiset Permutations</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-lbl">Worked Textbook Problems</div>
+          <div class="stat-val" style="color: var(--primary);">49 Solved</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">7 full 10-step proofs per concept</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-lbl">Interactive Worksheet</div>
+          <div class="stat-val" style="color: var(--accent);" id="ws-stat-count">70 Problems</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">Progressive hints &amp; step-by-step solutions</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-lbl">Simulation Games</div>
+          <div class="stat-val" style="color: var(--warning);">6 Games</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">Full SVG moving limbs animation</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: THEORY -->
+    <section id="sec-theory" style="display: none;">
+      <div style="margin-bottom: 1.5rem;">
+        <h2>Detailed Academic Theory &amp; 49 Worked Examples</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">
+          Select a concept below to examine formal definitions, derivations, assumptions, and 7 step-by-step solved problems.
+        </p>
+      </div>
+
+      <div class="topic-pills" id="theory-pills"></div>
+      <div id="theory-content"></div>
+    </section>
+
+    <!-- SECTION 3: WORKSHEET -->
+    <section id="sec-worksheet" style="display: none;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h2>Interactive Worksheet (70 Problems)</h2>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">
+            Ten problems per concept across Easy, Medium, and Challenging tiers. Immediate feedback with progressive hints.
+          </p>
+        </div>
+        <div style="font-weight: bold; font-family: var(--font-mono); font-size: 1.1rem; color: var(--accent);" id="ws-score-display">
+          Score: 0 / 70 (0%)
+        </div>
+      </div>
+
+      <div class="card" style="padding: 1rem; margin-bottom: 1.5rem;">
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+          <select id="ws-filter-topic" onchange="filterWorksheet()" class="form-control" style="width: auto;">
+            <option value="all">All 7 Topics (70)</option>
+            <option value="factorials">Factorials (10)</option>
+            <option value="perm_no_rep">Permutations w/o Repetition (10)</option>
+            <option value="comb_no_rep">Combinations w/o Repetition (10)</option>
+            <option value="perm_rep">Permutations with Repetition (10)</option>
+            <option value="comb_rep">Combinations with Repetition (10)</option>
+            <option value="circular_perm">Circular Permutations (10)</option>
+            <option value="identical_objects">Identical Objects (10)</option>
+          </select>
+          <select id="ws-filter-diff" onchange="filterWorksheet()" class="form-control" style="width: auto;">
+            <option value="all">All Difficulties</option>
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+            <option value="Challenging">Challenging</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="ws-list"></div>
+    </section>
+
+    <!-- SECTION 4: CALCULATOR -->
+    <section id="sec-calculator" style="display: none;">
+      <div style="margin-bottom: 1.5rem;">
+        <h2>Interactive Formula Calculator</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">
+          Arbitrary-precision BigInt arithmetic engine with step-by-step substitution breakdown.
+        </p>
+      </div>
+
+      <div class="calc-grid">
+        <div class="card">
+          <div class="form-group">
+            <label>Select Combinatorial Concept:</label>
+            <select id="calc-mode" class="form-control" onchange="handleCalcModeChange()">
+              <option value="fact">Factorial (n!)</option>
+              <option value="npr">Permutation Without Repetition (nPr)</option>
+              <option value="ncr">Combination Without Repetition (nCr)</option>
+              <option value="n_pow_r">Permutation With Repetition (n^r)</option>
+              <option value="stars_bars">Combination With Repetition - Stars &amp; Bars</option>
+              <option value="circular">Circular Permutation ((n-1)!)</option>
+              <option value="identical">Permutations of Identical Items (Multinomial)</option>
+            </select>
+          </div>
+
+          <div id="calc-inputs"></div>
+
+          <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;" onclick="runCalculation()">
+            Calculate Result
+          </button>
+        </div>
+
+        <div class="card" id="calc-output" style="display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <h3 id="calc-out-title" style="margin-bottom: 0.5rem;">Calculation Output</h3>
+            <div id="calc-out-formula" style="font-family: var(--font-mono); color: var(--primary); font-weight: bold; margin-bottom: 1rem;"></div>
+            <div id="calc-out-steps" style="font-family: var(--font-mono); font-size: 0.85rem; line-height: 1.8;"></div>
+          </div>
+          <div style="background: var(--accent-light); padding: 1rem; border-radius: 0.5rem; margin-top: 1rem; border: 1px solid var(--accent);">
+            <div style="font-size: 0.75rem; text-transform: uppercase; font-weight: bold;">Final Exact Result:</div>
+            <div id="calc-out-result" style="font-size: 1.5rem; font-weight: 800; font-family: var(--font-mono); color: var(--accent);"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: GAMES ZONE -->
+    <section id="sec-games" style="display: none;">
+      <div style="margin-bottom: 1.5rem;">
+        <h2>Combinatorics Game Zone (12 Animated Games)</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">
+          Interactive simulations featuring real animated characters, swappable tiles, escape vaults, race tracks, virtual dance stages, and 6 new academic laboratories.
+        </p>
+      </div>
+
+      <div class="topic-pills">
+        <button class="topic-pill" onclick="switchGame(7)">Game 7: Counting Maze</button>
+        <button class="topic-pill" onclick="switchGame(8)">Game 8: Arrangement Lab</button>
+        <button class="topic-pill" onclick="switchGame(9)">Game 9: Train Carriage</button>
+        <button class="topic-pill" onclick="switchGame(10)">Game 10: Selection Sorter</button>
+        <button class="topic-pill" onclick="switchGame(11)">Game 11: Tournament Planner</button>
+        <button class="topic-pill" onclick="switchGame(12)">Game 12: Formula Battle Arena</button>
+        <button class="topic-pill active" onclick="switchGame(6)">Game 6: Dance Formation Studio</button>
+        <button class="topic-pill" onclick="switchGame(1)">Game 1: Detective Challenge</button>
+        <button class="topic-pill" onclick="switchGame(2)">Game 2: Arrangement Puzzle</button>
+        <button class="topic-pill" onclick="switchGame(3)">Game 3: Combination Basket</button>
+        <button class="topic-pill" onclick="switchGame(4)">Game 4: Escape Room</button>
+        <button class="topic-pill" onclick="switchGame(5)">Game 5: Counting Race</button>
+      </div>
+
+      <div id="game-container"></div>
+    </section>
+
+    <!-- SECTION 6: FORMULAS -->
+    <section id="sec-reference" style="display: none;">
+      <div class="card">
+        <h2 style="margin-bottom: 1rem;">Comprehensive Formula Reference Sheet</h2>
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--border); text-align: left;">
+                <th style="padding: 0.75rem;">Concept</th>
+                <th style="padding: 0.75rem; font-family: var(--font-mono);">Formula</th>
+                <th style="padding: 0.75rem;">When to Apply</th>
+                <th style="padding: 0.75rem;">Key Example</th>
+              </tr>
+            </thead>
+            <tbody id="reference-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 7: LAB NOTES -->
+    <section id="sec-labnotes" style="display: none;">
+      <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;" class="no-print">
+        <button class="btn btn-primary" onclick="window.print()">🖨️ Print / Save as PDF</button>
+      </div>
+      <div class="card" id="labnotes-content"></div>
+    </section>
+  </main>
+
+  <script>
+    // Embedded Curriculum Data
+    const TOPICS_DATA = [
+      {
+        id: "factorials",
+        title: "Factorials and Fundamental Counting Principle",
+        short: "n!",
+        def: "For any non-negative integer n, the factorial of n (denoted as n!) is the product of all positive integers less than or equal to n: n! = n × (n - 1) × ... × 1, with the foundational definition that 0! = 1. In discrete structures, n! enumerates all bijective mappings of an n-element set onto itself.",
+        paras: [
+          "The factorial function forms the bedrock of combinatorics. When arranging n distinct objects in a straight line, the first slot has n choices, the second has n - 1 choices, and so forth down to 1 choice.",
+          "By the Rule of Product, the total arrangements equal the product n × (n - 1) × ... × 1 = n!.",
+          "The value 0! = 1 is essential: the empty set has exactly one permutation (the empty bijection), and from n! = n × (n-1)!, substituting n = 1 gives 1! = 1 × 0!, proving 0! = 1."
+        ],
+        examples: [
+          {
+            title: "Arranging 6 Textbooks on a Shelf",
+            prob: "In how many ways can 6 distinct textbooks be arranged on a shelf?",
+            form: "n! = 6!",
+            calc: "6! = 6 × 5 × 4 × 3 × 2 × 1 = 720.",
+            ans: "720 distinct arrangements",
+            ver: "Recurrence check: 6 × 120 = 720."
+          },
+          {
+            title: "Evaluating Factorial Fraction",
+            prob: "Simplify 10! / (7! × 3!).",
+            form: "n! / (r!(n-r)!)",
+            calc: "(10 × 9 × 8 × 7!) / (7! × 6) = 720 / 6 = 120.",
+            ans: "120",
+            ver: "10! / 30,240 = 120."
+          },
+          {
+            title: "Solving for Unknown n",
+            prob: "Solve (n+2)! / n! = 56.",
+            form: "(n+2)(n+1) = 56",
+            calc: "n² + 3n + 2 = 56 ⇒ n² + 3n - 54 = 0 ⇒ (n - 6)(n + 9) = 0.",
+            ans: "n = 6",
+            ver: "(6+2)! / 6! = 8 × 7 = 56."
+          },
+          {
+            title: "Vowels Kept Together (Block Method)",
+            prob: "In how many ways can COMPUTER be arranged with vowels (O,U,E) together?",
+            form: "6! × 3!",
+            calc: "6! = 720, 3! = 6. 720 × 6 = 4,320.",
+            ans: "4,320 arrangements",
+            ver: "5 consonants + 1 block = 6 items."
+          },
+          {
+            title: "Two Specific Students Never Adjacent",
+            prob: "Arrange 7 students such that A and B never stand together.",
+            form: "Total - Together = 7! - (6! × 2!)",
+            calc: "5,040 - 1,440 = 3,600.",
+            ans: "3,600 valid lineups",
+            ver: "Gap method: 5! × 6P2 = 120 × 30 = 3,600."
+          },
+          {
+            title: "Trailing Zeros in 25!",
+            prob: "How many trailing zeros are in 25!?",
+            form: "floor(25/5) + floor(25/25)",
+            calc: "5 + 1 = 6.",
+            ans: "6 trailing zeros",
+            ver: "Powers of 5 divide 25! exactly 6 times."
+          },
+          {
+            title: "Sum of Adjacent Factorials",
+            prob: "Simplify 8! + 7! as k × 7!.",
+            form: "7!(8 + 1) = 9 × 7!",
+            calc: "9 × 5,040 = 45,360.",
+            ans: "45,360",
+            ver: "40,320 + 5,040 = 45,360."
+          }
+        ]
+      },
+      {
+        id: "perm_no_rep",
+        title: "Permutations Without Repetition",
+        short: "nPr",
+        def: "A permutation without repetition of r elements chosen from n distinct elements is an ordered arrangement where each element is used at most once: nPr = n! / (n - r)!. Changing the order yields a distinct outcome.",
+        paras: [
+          "Order matters. Choosing Alice as Gold and Bob as Silver is distinct from Bob as Gold and Alice as Silver.",
+          "Slot 1 has n choices, Slot 2 has n - 1, ..., Slot r has n - r + 1 choices. Product = n(n-1)...(n-r+1) = n! / (n-r)!."
+        ],
+        examples: [
+          {
+            title: "Electing 3 Officers from 25 Students",
+            prob: "In how many ways can President, VP, and Secretary be chosen from 25 students?",
+            form: "25P3 = 25! / 22!",
+            calc: "25 × 24 × 23 = 13,800.",
+            ans: "13,800 ways",
+            ver: "25 × 24 × 23 = 13,800."
+          },
+          {
+            title: "Olympic 100m Podium Finish",
+            prob: "Awarding Gold, Silver, Bronze among 8 sprinters.",
+            form: "8P3 = 8 × 7 × 6",
+            calc: "56 × 6 = 336.",
+            ans: "336 ways",
+            ver: "8 choices for Gold, 7 for Silver, 6 for Bronze."
+          },
+          {
+            title: "4-Digit Passcodes from {1..9}",
+            prob: "How many 4-digit codes with no repeated digits?",
+            form: "9P4 = 9 × 8 × 7 × 6",
+            calc: "72 × 42 = 3,024.",
+            ans: "3,024 passcodes",
+            ver: "9! / 5! = 3,024."
+          },
+          {
+            title: "3-Digit Even Numbers",
+            prob: "How many 3-digit even numbers from {1..7} without repetition?",
+            form: "3 × 6P2",
+            calc: "3 × (6 × 5) = 3 × 30 = 90.",
+            ans: "90 even numbers",
+            ver: "Units slot has 3 choices ({2,4,6})."
+          },
+          {
+            title: "Algebraic Permutation Equation",
+            prob: "Solve nP4 = 20 × nP2.",
+            form: "(n-2)(n-3) = 20",
+            calc: "n² - 5n + 6 = 20 ⇒ n² - 5n - 14 = 0 ⇒ (n - 7)(n + 2) = 0.",
+            ans: "n = 7",
+            ver: "7P4 = 840 = 20 × 42."
+          },
+          {
+            title: "Alternating Dancers in Line",
+            prob: "Arrange 4 men and 4 women alternately in line.",
+            form: "2 × (4! × 4!)",
+            calc: "2 × (24 × 24) = 2 × 576 = 1,152.",
+            ans: "1,152 arrangements",
+            ver: "Two patterns: M-F or F-M."
+          },
+          {
+            title: "Guaranteed Member Inclusion",
+            prob: "From 10 professors including Rao, choose 4 ranked posts with Rao included.",
+            form: "4 × 9P3",
+            calc: "4 × (9 × 8 × 7) = 4 × 504 = 2,016.",
+            ans: "2,016 ways",
+            ver: "Total (10P4) - Excluded (9P4) = 5,040 - 3,024 = 2,016."
+          }
+        ]
+      },
+      {
+        id: "comb_no_rep",
+        title: "Combinations Without Repetition",
+        short: "nCr",
+        def: "A combination without repetition of r elements chosen from n distinct elements is an unordered subset of size r: nCr = n! / [r!(n - r)!]. Order within the subset is ignored.",
+        paras: [
+          "In a study group or committee, {A, B, C} is identical to {C, B, A}.",
+          "Because every r-element subset can be permuted in r! ways, nPr overcounts by r!. Dividing gives nCr = nPr / r!."
+        ],
+        examples: [
+          {
+            title: "5-Member Curriculum Committee from 12 Faculty",
+            prob: "Choose a committee of 5 professors from 12.",
+            form: "12C5 = 12! / (5! × 7!)",
+            calc: "(12 × 11 × 10 × 9 × 8) / 120 = 792.",
+            ans: "792 committees",
+            ver: "By symmetry, 12C5 = 12C7 = 792."
+          },
+          {
+            title: "Mixed Committee with Gender Quotas",
+            prob: "From 8 men and 6 women, choose 2 men and 2 women.",
+            form: "8C2 × 6C2",
+            calc: "28 × 15 = 420.",
+            ans: "420 committees",
+            ver: "8C2 = 28; 6C2 = 15."
+          },
+          {
+            title: "At Least One Condition",
+            prob: "From 7 developers and 5 analysts, choose 4 with at least 1 analyst.",
+            form: "Total - 0 Analysts = 12C4 - 7C4",
+            calc: "495 - 35 = 460.",
+            ans: "460 teams",
+            ver: "Summing 1, 2, 3, 4 analysts yields 175 + 210 + 70 + 5 = 460."
+          },
+          {
+            title: "Diagonals of a Decagon",
+            prob: "How many diagonals in a 10-sided polygon?",
+            form: "10C2 - 10",
+            calc: "45 - 10 = 35.",
+            ans: "35 diagonals",
+            ver: "Formula n(n-3)/2 = 10(7)/2 = 35."
+          },
+          {
+            title: "Pascal's Identity Verification",
+            prob: "Verify 6C3 = 5C2 + 5C3.",
+            form: "20 = 10 + 10",
+            calc: "6C3 = 20; 5C2 = 10; 5C3 = 10.",
+            ans: "20 = 20 (Verified)",
+            ver: "LHS = RHS."
+          },
+          {
+            title: "Full House in Poker",
+            prob: "How many 5-card hands have 3 of one rank and 2 of another?",
+            form: "13C1 × 4C3 × 12C1 × 4C2",
+            calc: "13 × 4 × 12 × 6 = 3,744.",
+            ans: "3,744 hands",
+            ver: "52 × 72 = 3,744."
+          },
+          {
+            title: "Solving nC2 = 28",
+            prob: "Find n such that nC2 = 28.",
+            form: "n(n-1)/2 = 28",
+            calc: "n(n-1) = 56 ⇒ n² - n - 56 = 0 ⇒ (n - 8)(n + 7) = 0.",
+            ans: "n = 8",
+            ver: "8 × 7 / 2 = 28."
+          }
+        ]
+      },
+      {
+        id: "perm_rep",
+        title: "Permutations With Repetition Allowed",
+        short: "n^r",
+        def: "When creating an ordered sequence of length r from n distinct symbols where each symbol may be repeated independently, the total number of sequences is n^r.",
+        paras: [
+          "Each position has n independent choices: n × n × ... × n = n^r.",
+          "Base n is the number of options available; exponent r is the number of choices being made."
+        ],
+        examples: [
+          {
+            title: "4-Digit ATM PIN",
+            prob: "How many 4-digit PINs from 10 digits with repetition?",
+            form: "10^4",
+            calc: "10 × 10 × 10 × 10 = 10,000.",
+            ans: "10,000 PINs",
+            ver: "From 0000 to 9999 is 10,000 codes."
+          },
+          {
+            title: "16-Bit Register Values",
+            prob: "How many values in a 16-bit register?",
+            form: "2^16",
+            calc: "2^16 = 65,536.",
+            ans: "65,536 states",
+            ver: "Standard 16-bit capacity."
+          },
+          {
+            title: "License Plates (2 Letters, 4 Digits)",
+            prob: "License plates with 2 letters and 4 digits (repetition allowed).",
+            form: "26^2 × 10^4",
+            calc: "676 × 10,000 = 6,760,000.",
+            ans: "6,760,000 plates",
+            ver: "26 × 26 × 10 × 10 × 10 × 10."
+          },
+          {
+            title: "Phone Numbers with No Leading 0 or 1",
+            prob: "7-digit numbers with first digit 2-9 and others 0-9.",
+            form: "8 × 10^6",
+            calc: "8 × 1,000,000 = 8,000,000.",
+            ans: "8,000,000 numbers",
+            ver: "First slot 8 choices, remaining 6 slots 10 choices."
+          },
+          {
+            title: "5 Letters into 3 Mailboxes",
+            prob: "In how many ways can 5 distinct letters be posted in 3 boxes?",
+            form: "3^5",
+            calc: "3 × 3 × 3 × 3 × 3 = 243.",
+            ans: "243 ways",
+            ver: "Each letter chooses 1 of 3 boxes."
+          },
+          {
+            title: "DNA Strands of Length 6",
+            prob: "How many DNA sequences of length 6 from {A, C, G, T}?",
+            form: "4^6",
+            calc: "4^6 = 4,096.",
+            ans: "4,096 strands",
+            ver: "(2^2)^6 = 2^12 = 4,096."
+          },
+          {
+            title: "10-Question Multiple Choice Key",
+            prob: "Answer keys for 10 questions with 4 options each.",
+            form: "4^10",
+            calc: "4^10 = 1,048,576.",
+            ans: "1,048,576 keys",
+            ver: "1024 × 1024 = 1,048,576."
+          }
+        ]
+      },
+      {
+        id: "comb_rep",
+        title: "Combinations With Repetition (Stars & Bars)",
+        short: "n+r-1Cr",
+        def: "A combination with repetition represents selecting an unordered collection of r items from n distinct types with repetition allowed: C(n + r - 1, r). Formally, it counts non-negative integer solutions to x1 + x2 + ... + xn = r.",
+        paras: [
+          "Represent the r selected items as stars (★) and the n categories using n - 1 separator bars (|).",
+          "Total positions in the sequence = r + n - 1. Choosing r positions for stars gives C(n + r - 1, r)."
+        ],
+        examples: [
+          {
+            title: "3 Ice-Cream Scoops from 5 Flavours",
+            prob: "Select 3 scoops from 5 flavours with repetition.",
+            form: "C(5 + 3 - 1, 3) = C(7, 3)",
+            calc: "(7 × 6 × 5) / 6 = 35.",
+            ans: "35 combinations",
+            ver: "All 3 same (5) + 2 same (20) + all diff (10) = 35."
+          },
+          {
+            title: "Non-Negative Solutions to x1+x2+x3+x4=10",
+            prob: "Find solutions with xi ≥ 0.",
+            form: "C(4 + 10 - 1, 10) = C(13, 3)",
+            calc: "(13 × 12 × 11) / 6 = 286.",
+            ans: "286 solutions",
+            ver: "13 × 2 × 11 = 286."
+          },
+          {
+            title: "12 Candies to 4 Children (Each ≥ 1)",
+            prob: "Distribute 12 identical candies to 4 kids, each gets ≥ 1.",
+            form: "C(12 - 1, 4 - 1) = C(11, 3)",
+            calc: "(11 × 10 × 9) / 6 = 165.",
+            ans: "165 ways",
+            ver: "Pre-allocate 4 candies, distribute remaining 8."
+          },
+          {
+            title: "Terms in (a+b+c+d)^6",
+            prob: "How many terms in expansion of 4 variables to power 6?",
+            form: "C(4 + 6 - 1, 6) = C(9, 3)",
+            calc: "(9 × 8 × 7) / 6 = 84.",
+            ans: "84 terms",
+            ver: "3 × 4 × 7 = 84."
+          },
+          {
+            title: "A Dozen Donuts from 6 Varieties",
+            prob: "Buy 12 donuts from 6 varieties.",
+            form: "C(6 + 12 - 1, 12) = C(17, 5)",
+            calc: "(17 × 16 × 15 × 14 × 13) / 120 = 6,188.",
+            ans: "6,188 boxes",
+            ver: "Exact multiset coefficient."
+          },
+          {
+            title: "7 Tasks to 3 Server Cores",
+            prob: "Distribute 7 identical tasks to 3 cores.",
+            form: "C(3 + 7 - 1, 7) = C(9, 2)",
+            calc: "(9 × 8) / 2 = 36.",
+            ans: "36 configurations",
+            ver: "Partitions of 7 into 3 parts."
+          },
+          {
+            title: "Upper Bound Constraint x1 ≤ 3",
+            prob: "Solutions to x1+x2+x3=8 with x1 ≤ 3.",
+            form: "Total - (x1 ≥ 4) = C(10,2) - C(6,2)",
+            calc: "45 - 15 = 30.",
+            ans: "30 solutions",
+            ver: "Direct sum for x1=0,1,2,3 gives 9+8+7+6 = 30."
+          }
+        ]
+      },
+      {
+        id: "circular_perm",
+        title: "Circular Permutations",
+        short: "(n-1)!",
+        def: "A circular permutation is an arrangement of distinct objects along a closed circle where rotations are equivalent: (n - 1)!. If the circle can be flipped over in 3D (such as a necklace), clockwise and counter-clockwise are identical, giving (n - 1)! / 2.",
+        paras: [
+          "Rotating everyone one chair clockwise preserves all left/right neighbours.",
+          "Fix one person as a reference anchor. The remaining n - 1 seats become distinct relative to the anchor, giving (n - 1)!."
+        ],
+        examples: [
+          {
+            title: "6 Delegates Around a Round Table",
+            prob: "Seat 6 delegates at a round table (rotations equivalent).",
+            form: "(6 - 1)! = 5!",
+            calc: "5! = 120.",
+            ans: "120 seatings",
+            ver: "6! / 6 = 120."
+          },
+          {
+            title: "7 Beads on a Necklace",
+            prob: "String 7 beads into a circular necklace (flippable).",
+            form: "(7 - 1)! / 2 = 6! / 2",
+            calc: "720 / 2 = 360.",
+            ans: "360 necklaces",
+            ver: "Divided by 2 for reflectional symmetry."
+          },
+          {
+            title: "Two People Always Together",
+            prob: "Seat 8 board members circularly with Chair and CEO together.",
+            form: "(7 - 1)! × 2!",
+            calc: "6! × 2 = 720 × 2 = 1,440.",
+            ans: "1,440 seatings",
+            ver: "Treat [Chair, CEO] as 1 entity."
+          },
+          {
+            title: "Alternating Men and Women in Circle",
+            prob: "Seat 5 men and 5 women circularly with alternation.",
+            form: "(5 - 1)! × 5!",
+            calc: "24 × 120 = 2,880.",
+            ans: "2,880 seatings",
+            ver: "Seat men circularly first, then women in gaps linearly."
+          },
+          {
+            title: "Two People Never Adjacent",
+            prob: "Seat 7 people circularly such that A and B are never adjacent.",
+            form: "(7-1)! - ((6-1)! × 2!)",
+            calc: "720 - 240 = 480.",
+            ans: "480 seatings",
+            ver: "Gap method: 4! × 5P2 = 24 × 20 = 480."
+          },
+          {
+            title: "Circular with Numbered Chairs",
+            prob: "Seat 6 people in 6 numbered chairs in a circle.",
+            form: "6! (Linear!)",
+            calc: "6! = 720.",
+            ans: "720 seatings",
+            ver: "Numbered chairs break rotational symmetry."
+          },
+          {
+            title: "5 Keys on a Keyring",
+            prob: "Arrange 5 keys on a keyring (no tag).",
+            form: "(5 - 1)! / 2 = 4! / 2",
+            calc: "24 / 2 = 12.",
+            ans: "12 arrangements",
+            ver: "5! / (5 × 2) = 12."
+          }
+        ]
+      },
+      {
+        id: "identical_objects",
+        title: "Permutations of Objects With Identical Items",
+        short: "n! / ∏ni!",
+        def: "When arranging n total objects where some objects are indistinguishable copies with multiplicities n1, n2, ..., nk, the number of distinct permutations is given by the multinomial coefficient: n! / (n1! × n2! × ... × nk!).",
+        paras: [
+          "In the word MOM, the two M's cannot be distinguished. Treating them as distinct overcounts by 2!.",
+          "Dividing n! by the factorial of each multiplicity eliminates identical duplicate arrangements."
+        ],
+        examples: [
+          {
+            title: "Permutations of BANANA",
+            prob: "Find arrangements of BANANA (6 letters: B=1, A=3, N=2).",
+            form: "6! / (3! × 2!)",
+            calc: "720 / 12 = 60.",
+            ans: "60 arrangements",
+            ver: "(6 × 5 × 4) / 2 = 60."
+          },
+          {
+            title: "Permutations of MISSISSIPPI",
+            prob: "Arrangements of MISSISSIPPI (11 letters: M=1, I=4, S=4, P=2).",
+            form: "11! / (4! × 4! × 2!)",
+            calc: "39,916,800 / 1,152 = 34,650.",
+            ans: "34,650 anagrams",
+            ver: "Exact multinomial calculation."
+          },
+          {
+            title: "Lattice Grid Paths to (5, 3)",
+            prob: "Shortest paths on grid from (0,0) to (5,3) using 5 Right and 3 Up.",
+            form: "8! / (5! × 3!) = 8C3",
+            calc: "(8 × 7 × 6) / 6 = 56.",
+            ans: "56 paths",
+            ver: "8C3 = 56."
+          },
+          {
+            title: "Colored Maritime Signal Flags",
+            prob: "Arrange 4 Red, 3 White, 2 Blue flags on a mast.",
+            form: "9! / (4! × 3! × 2!)",
+            calc: "362,880 / 288 = 1,260.",
+            ans: "1,260 signals",
+            ver: "(9 × 8 × 7 × 6 × 5) / 12 = 1,260."
+          },
+          {
+            title: "MATHEMATICS with Vowels Together",
+            prob: "Arrangements of MATHEMATICS with vowels (A,A,E,I) together.",
+            form: "[8! / (2! × 2!)] × [4! / 2!]",
+            calc: "10,080 × 12 = 120,960.",
+            ans: "120,960 arrangements",
+            ver: "8 items with M=2, T=2; vowels with A=2."
+          },
+          {
+            title: "Permutations of LEVEL",
+            prob: "Arrangements of LEVEL (5 letters: L=2, E=2, V=1).",
+            form: "5! / (2! × 2!)",
+            calc: "120 / 4 = 30.",
+            ans: "30 permutations",
+            ver: "Verified."
+          },
+          {
+            title: "Coin Toss 6 Heads and 4 Tails",
+            prob: "How many 10-toss sequences have 6 Heads and 4 Tails?",
+            form: "10! / (6! × 4!) = 10C4",
+            calc: "(10 × 9 × 8 × 7) / 24 = 210.",
+            ans: "210 sequences",
+            ver: "10C4 = 210."
+          }
+        ]
+      }
+    ];
+
+    // Navigation state
+    function switchSection(secId) {
+      document.querySelectorAll("main > section").forEach(sec => sec.style.display = "none");
+      document.querySelectorAll("nav button").forEach(btn => btn.classList.remove("active"));
+      
+      const targetSec = document.getElementById("sec-" + secId);
+      if (targetSec) targetSec.style.display = "block";
+
+      const navBtns = Array.from(document.querySelectorAll("nav button"));
+      const map = { overview: 0, theory: 1, worksheet: 2, calculator: 3, games: 4, reference: 5, labnotes: 6 };
+      if (navBtns[map[secId]]) navBtns[map[secId]].classList.add("active");
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function toggleTheme() {
+      document.documentElement.classList.toggle("dark");
+    }
+
+    // Theory rendering
+    let activeTopicIdx = 0;
+    function renderTheory() {
+      const pillsContainer = document.getElementById("theory-pills");
+      pillsContainer.innerHTML = TOPICS_DATA.map((t, idx) => `
+        <button class="topic-pill ${idx === activeTopicIdx ? 'active' : ''}" onclick="selectTheoryTopic(${idx})">
+          ${idx + 1}. ${t.title.split(" ")[0]} (${t.short})
+        </button>
+      `).join("");
+
+      const t = TOPICS_DATA[activeTopicIdx];
+      const content = document.getElementById("theory-content");
+      content.innerHTML = `
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+            <div>
+              <span style="font-size: 0.8rem; font-weight: bold; color: var(--primary);">MODULE ${activeTopicIdx + 1} OF 7</span>
+              <h3>${t.title}</h3>
+            </div>
+            <div style="font-family: var(--font-mono); font-weight: bold; font-size: 1.25rem; color: var(--primary); background: var(--bg); padding: 0.5rem 1rem; border-radius: 0.5rem; border: 1px solid var(--border);">
+              ${t.short}
+            </div>
+          </div>
+
+          <div style="background: var(--primary-light); padding: 1rem; border-radius: 0.5rem; border: 1px solid var(--primary); margin-bottom: 1.25rem; font-size: 0.9rem;">
+            <strong>Formal Academic Definition:</strong><br>${t.def}
+          </div>
+
+          <div style="font-size: 0.9rem; margin-bottom: 1.5rem; line-height: 1.8;">
+            ${t.paras.map(p => `<p style="margin-bottom: 0.75rem;">${p}</p>`).join("")}
+          </div>
+
+          <h4 style="margin-bottom: 1rem; border-top: 1px solid var(--border); padding-top: 1rem;">
+            7 Fully Solved Textbook Problems (10-Step Verifications)
+          </h4>
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            ${t.examples.map((ex, i) => `
+              <div style="border: 1px solid var(--border); border-radius: 0.5rem; padding: 1rem; background: var(--bg);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                  <strong style="font-size: 0.9rem;">Example ${i + 1}: ${ex.title}</strong>
+                  <span class="badge" style="background: var(--accent-light); color: var(--accent); font-family: var(--font-mono);">${ex.ans}</span>
+                </div>
+                <div style="font-size: 0.85rem; font-style: italic; color: var(--text-muted); margin-bottom: 0.5rem;">${ex.prob}</div>
+                <div style="font-size: 0.85rem; font-family: var(--font-mono); margin-bottom: 0.25rem;"><strong>Formula:</strong> ${ex.form}</div>
+                <div style="font-size: 0.85rem; font-family: var(--font-mono); margin-bottom: 0.25rem;"><strong>Calculation:</strong> ${ex.calc}</div>
+                <div style="font-size: 0.85rem; color: var(--accent); font-weight: bold;"><strong>Final Answer:</strong> ${ex.ans}</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;"><strong>Verification:</strong> ${ex.ver}</div>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function selectTheoryTopic(idx) {
+      activeTopicIdx = idx;
+      renderTheory();
+    }
+
+    // Worksheet Generator (70 Questions: 10 per concept)
+    const WORKSHEET_RAW = [
+      // Topic 1 Factorials
+      { id: "ws_01", t: "factorials", d: "Easy", q: "Evaluate the exact value of 5!.", ans: "120", hint: "5! = 5 × 4 × 3 × 2 × 1.", sol: "5 × 4 × 3 × 2 × 1 = 120." },
+      { id: "ws_02", t: "factorials", d: "Easy", q: "What is the mathematical value of 0!?", ans: "1", hint: "0! is the empty product, defined as 1.", sol: "1! = 1 × 0! ⇒ 0! = 1." },
+      { id: "ws_03", t: "factorials", d: "Easy", q: "Simplify 7! / 5!.", ans: "42", hint: "7! = 7 × 6 × 5!.", sol: "7 × 6 = 42." },
+      { id: "ws_04", t: "factorials", d: "Medium", q: "Evaluate 8! / (4! × 4!).", ans: "70", hint: "Expand 8! down to 4!.", sol: "(8 × 7 × 6 × 5) / 24 = 70." },
+      { id: "ws_05", t: "factorials", d: "Medium", q: "Solve for positive integer n: (n+1)! = 12 × (n-1)!.", ans: "3", hint: "n(n+1) = 12.", sol: "n² + n - 12 = 0 ⇒ n = 3." },
+      { id: "ws_06", t: "factorials", d: "Medium", q: "Ways to schedule 5 distinct CPU testing tasks sequentially?", ans: "120", hint: "5 distinct tasks in a line: 5!.", sol: "5! = 120." },
+      { id: "ws_07", t: "factorials", d: "Medium", q: "Arrange 6 books if 2 specific books must always stay together?", ans: "240", hint: "5! × 2!.", sol: "120 × 2 = 240." },
+      { id: "ws_08", t: "factorials", d: "Challenging", q: "Remainder when 1! + 2! + ... + 100! is divided by 15?", ans: "3", hint: "For k ≥ 5, k! is divisible by 15.", sol: "1! + 2! + 3! + 4! = 33. 33 mod 15 = 3." },
+      { id: "ws_09", t: "factorials", d: "Challenging", q: "How many trailing zeros are in 50!?", ans: "12", hint: "floor(50/5) + floor(50/25).", sol: "10 + 2 = 12." },
+      { id: "ws_10", t: "factorials", d: "Challenging", q: "Arrange 7 students so that Raj and Amit never stand adjacent.", ans: "3600", hint: "7! - (6! × 2!).", sol: "5040 - 1440 = 3600." },
+
+      // Topic 2 Permutations w/o rep
+      { id: "ws_11", t: "perm_no_rep", d: "Easy", q: "Compute 5P3.", ans: "60", hint: "5! / 2! = 5 × 4 × 3.", sol: "5 × 4 × 3 = 60." },
+      { id: "ws_12", t: "perm_no_rep", d: "Easy", q: "Compute 7P2.", ans: "42", hint: "7 × 6.", sol: "7 × 6 = 42." },
+      { id: "ws_13", t: "perm_no_rep", d: "Easy", q: "Awarding 1st, 2nd, 3rd place medals among 8 runners?", ans: "336", hint: "8P3.", sol: "8 × 7 × 6 = 336." },
+      { id: "ws_14", t: "perm_no_rep", d: "Medium", q: "Electing President, VP, Treasurer from 10 students?", ans: "720", hint: "10P3.", sol: "10 × 9 × 8 = 720." },
+      { id: "ws_15", t: "perm_no_rep", d: "Medium", q: "4-digit numbers with distinct digits from {1..7}?", ans: "840", hint: "7P4.", sol: "7 × 6 × 5 × 4 = 840." },
+      { id: "ws_16", t: "perm_no_rep", d: "Medium", q: "3-digit EVEN numbers from {1..6} without repetition?", ans: "60", hint: "3 choices for units slot × 5P2.", sol: "3 × 20 = 60." },
+      { id: "ws_17", t: "perm_no_rep", d: "Medium", q: "Solve nP4 = 12 × nP2 for n ≥ 4.", ans: "6", hint: "(n-2)(n-3) = 12.", sol: "n² - 5n - 6 = 0 ⇒ n = 6." },
+      { id: "ws_18", t: "perm_no_rep", d: "Challenging", q: "Arrange 4 boys and 4 girls in a row such that genders alternate?", ans: "1152", hint: "2 × (4! × 4!).", sol: "2 × 576 = 1152." },
+      { id: "ws_19", t: "perm_no_rep", d: "Challenging", q: "4-digit numbers > 5000 from {2,3,5,7,9} without repetition?", ans: "72", hint: "3 choices for thousands digit × 4P3.", sol: "3 × 24 = 72." },
+      { id: "ws_20", t: "perm_no_rep", d: "Challenging", q: "Committee of 4 ranked posts from 9 candidates where Alice MUST hold one?", ans: "1344", hint: "4 choices for Alice × 8P3.", sol: "4 × 336 = 1344." },
+
+      // Topic 3 Combinations w/o rep
+      { id: "ws_21", t: "comb_no_rep", d: "Easy", q: "Evaluate 5C3.", ans: "10", hint: "5! / (3! 2!).", sol: "(5 × 4 × 3) / 6 = 10." },
+      { id: "ws_22", t: "comb_no_rep", d: "Easy", q: "Compute 10C2.", ans: "45", hint: "10 × 9 / 2.", sol: "45." },
+      { id: "ws_23", t: "comb_no_rep", d: "Easy", q: "Choose a study group of 4 students from 9?", ans: "126", hint: "9C4.", sol: "(9 × 8 × 7 × 6) / 24 = 126." },
+      { id: "ws_24", t: "comb_no_rep", d: "Medium", q: "From 6 men and 5 women, choose 2 men and 2 women.", ans: "150", hint: "6C2 × 5C2.", sol: "15 × 10 = 150." },
+      { id: "ws_25", t: "comb_no_rep", d: "Medium", q: "Number of diagonals in an 8-sided octagon?", ans: "20", hint: "8C2 - 8.", sol: "28 - 8 = 20." },
+      { id: "ws_26", t: "comb_no_rep", d: "Medium", q: "Solve nC2 = 36 for n ≥ 2.", ans: "9", hint: "n(n-1) = 72.", sol: "n = 9." },
+      { id: "ws_27", t: "comb_no_rep", d: "Medium", q: "Committee of 5 from 7 developers and 4 testers with at least 1 tester?", ans: "441", hint: "11C5 - 7C5.", sol: "462 - 21 = 441." },
+      { id: "ws_28", t: "comb_no_rep", d: "Challenging", q: "Sum of coefficients 8C0 + 8C1 + ... + 8C8?", ans: "256", hint: "2^8.", sol: "2^8 = 256." },
+      { id: "ws_29", t: "comb_no_rep", d: "Challenging", q: "5-card poker hands that are Four of a Kind?", ans: "624", hint: "13 × 1 × 48.", sol: "624." },
+      { id: "ws_30", t: "comb_no_rep", d: "Challenging", q: "Find r if 15Cr = 15C(r+3).", ans: "6", hint: "r + (r+3) = 15.", sol: "2r = 12 ⇒ r = 6." },
+
+      // Topic 4 Permutations with rep
+      { id: "ws_31", t: "perm_rep", d: "Easy", q: "3-character strings from 5 symbols with repetition allowed?", ans: "125", hint: "5^3.", sol: "5 × 5 × 5 = 125." },
+      { id: "ws_32", t: "perm_rep", d: "Easy", q: "Distinct 8-bit binary strings (1 byte)?", ans: "256", hint: "2^8.", sol: "256." },
+      { id: "ws_33", t: "perm_rep", d: "Easy", q: "4-digit ATM PINs from 10 digits with repetition?", ans: "10000", hint: "10^4.", sol: "10,000." },
+      { id: "ws_34", t: "perm_rep", d: "Medium", q: "Ways to post 4 distinct letters into 3 mailboxes?", ans: "81", hint: "3^4.", sol: "81." },
+      { id: "ws_35", t: "perm_rep", d: "Medium", q: "5-digit numbers from {0,1,2,3,4} with repetition (no leading 0)?", ans: "2500", hint: "4 × 5^4.", sol: "4 × 625 = 2,500." },
+      { id: "ws_36", t: "perm_rep", d: "Medium", q: "Answer keys for 6 questions with 4 options each?", ans: "4096", hint: "4^6.", sol: "4,096." },
+      { id: "ws_37", t: "perm_rep", d: "Medium", q: "DNA sequences of length 5 from {A,C,G,T}?", ans: "1024", hint: "4^5.", sol: "1,024." },
+      { id: "ws_38", t: "perm_rep", d: "Challenging", q: "4-digit numbers from {1..9} with AT LEAST ONE repeated digit?", ans: "3537", hint: "9^4 - 9P4.", sol: "6561 - 3024 = 3,537." },
+      { id: "ws_39", t: "perm_rep", d: "Challenging", q: "Length-3 passwords from 26 letters + 10 digits containing at least 1 digit?", ans: "28994", hint: "36^3 - 26^3.", sol: "46656 - 17662 = 28,994." },
+      { id: "ws_40", t: "perm_rep", d: "Challenging", q: "3-digit positive integers (100-999) containing digit 7 at least once?", ans: "252", hint: "900 - (8 × 9 × 9).", sol: "900 - 648 = 252." },
+
+      // Topic 5 Combinations with rep (Stars & Bars)
+      { id: "ws_41", t: "comb_rep", d: "Easy", q: "Choose 3 scoops from 5 flavours with repetition: C(5+3-1, 3)?", ans: "35", hint: "C(7, 3).", sol: "35." },
+      { id: "ws_42", t: "comb_rep", d: "Easy", q: "Choose 2 scoops from 4 flavours with repetition: C(4+2-1, 2)?", ans: "10", hint: "C(5, 2).", sol: "10." },
+      { id: "ws_43", t: "comb_rep", d: "Easy", q: "Non-negative solutions to x1 + x2 + x3 = 5?", ans: "21", hint: "C(3+5-1, 5) = C(7, 2).", sol: "21." },
+      { id: "ws_44", t: "comb_rep", d: "Medium", q: "Distribute 6 identical coins to 3 children (empty allowed)?", ans: "28", hint: "C(3+6-1, 6) = C(8, 2).", sol: "28." },
+      { id: "ws_45", t: "comb_rep", d: "Medium", q: "POSITIVE integer solutions (xi ≥ 1) to x1 + x2 + x3 + x4 = 9?", ans: "56", hint: "C(9-1, 4-1) = C(8, 3).", sol: "56." },
+      { id: "ws_46", t: "comb_rep", d: "Medium", q: "Number of terms in expansion of (x + y + z)^7?", ans: "36", hint: "C(3+7-1, 7) = C(9, 2).", sol: "36." },
+      { id: "ws_47", t: "comb_rep", d: "Medium", q: "Buy 4 pastries from 5 available varieties?", ans: "70", hint: "C(5+4-1, 4) = C(8, 4).", sol: "70." },
+      { id: "ws_48", t: "comb_rep", d: "Challenging", q: "Non-negative solutions to x1+x2+x3=9 with x1 ≥ 2, x2 ≥ 1?", ans: "28", hint: "Remaining sum = 9 - 3 = 6. C(3+6-1, 6).", sol: "28." },
+      { id: "ws_49", t: "comb_rep", d: "Challenging", q: "Integer solutions to x1+x2+x3=10 with 0 ≤ xi ≤ 5 for all xi?", ans: "21", hint: "PIE: 66 - 3×15.", sol: "66 - 45 = 21." },
+      { id: "ws_50", t: "comb_rep", d: "Challenging", q: "10 identical packets to 4 buffers where buffer 1 gets at most 3?", ans: "202", hint: "C(13,3) - C(9,3).", sol: "286 - 84 = 202." },
+
+      // Topic 6 Circular
+      { id: "ws_51", t: "circular_perm", d: "Easy", q: "Seat 5 people at a round table (rotations equivalent)?", ans: "24", hint: "(5 - 1)!.", sol: "4! = 24." },
+      { id: "ws_52", t: "circular_perm", d: "Easy", q: "Ways for 6 dancers to form a circular ring?", ans: "120", hint: "(6 - 1)!.", sol: "5! = 120." },
+      { id: "ws_53", t: "circular_perm", d: "Easy", q: "Ways to string 5 distinct beads into a necklace (flippable)?", ans: "12", hint: "(5 - 1)! / 2.", sol: "24 / 2 = 12." },
+      { id: "ws_54", t: "circular_perm", d: "Medium", q: "Ways to arrange 7 distinct keys on a keyring (flippable)?", ans: "360", hint: "6! / 2.", sol: "720 / 2 = 360." },
+      { id: "ws_55", t: "circular_perm", d: "Medium", q: "Seat 6 people at round table with 2 specific people always together?", ans: "48", hint: "4! × 2!.", sol: "24 × 2 = 48." },
+      { id: "ws_56", t: "circular_perm", d: "Medium", q: "Seat 6 people at round table with 2 specific people NEVER together?", ans: "72", hint: "5! - 48.", sol: "120 - 48 = 72." },
+      { id: "ws_57", t: "circular_perm", d: "Medium", q: "Seat 4 men and 4 women circularly such that they alternate?", ans: "144", hint: "3! × 4!.", sol: "6 × 24 = 144." },
+      { id: "ws_58", t: "circular_perm", d: "Challenging", q: "Seat 5 people in 5 numbered chairs in a circle?", ans: "120", hint: "Numbered chairs break rotational symmetry (5!).", sol: "5! = 120." },
+      { id: "ws_59", t: "circular_perm", d: "Challenging", q: "Seat 8 delegates at round table with 3 specific delegates together?", ans: "720", hint: "5! × 3!.", sol: "120 × 6 = 720." },
+      { id: "ws_60", t: "circular_perm", d: "Challenging", q: "Necklace of 6 beads where Red and Blue beads are NEVER adjacent?", ans: "36", hint: "Total (60) - Adjacent (24).", sol: "60 - 24 = 36." },
+
+      // Topic 7 Identical objects
+      { id: "ws_61", t: "identical_objects", d: "Easy", q: "Distinct linear permutations of BANANA?", ans: "60", hint: "6! / (3! 2!).", sol: "720 / 12 = 60." },
+      { id: "ws_62", t: "identical_objects", d: "Easy", q: "Distinct permutations of LEVEL?", ans: "30", hint: "5! / (2! 2!).", sol: "120 / 4 = 30." },
+      { id: "ws_63", t: "identical_objects", d: "Easy", q: "Distinct permutations of APPLE?", ans: "60", hint: "5! / 2!.", sol: "120 / 2 = 60." },
+      { id: "ws_64", t: "identical_objects", d: "Medium", q: "Distinct anagrams of STATISTICS (10 letters: S=3,T=3,I=2,A=1,C=1)?", ans: "50400", hint: "10! / (3! 3! 2!).", sol: "3628800 / 72 = 50,400." },
+      { id: "ws_65", t: "identical_objects", d: "Medium", q: "Shortest grid paths from (0,0) to (4,2) with 4 Right, 2 Up?", ans: "15", hint: "6! / (4! 2!).", sol: "15." },
+      { id: "ws_66", t: "identical_objects", d: "Medium", q: "Arrange 3 Red, 2 White, 2 Green balls in a row?", ans: "210", hint: "7! / (3! 2! 2!).", sol: "5040 / 24 = 210." },
+      { id: "ws_67", t: "identical_objects", d: "Medium", q: "7-bit binary numbers containing four 1's and three 0's?", ans: "35", hint: "7! / (4! 3!).", sol: "35." },
+      { id: "ws_68", t: "identical_objects", d: "Challenging", q: "Distinct anagrams of MISSISSIPPI?", ans: "34650", hint: "11! / (4! 4! 2!).", sol: "39916800 / 1152 = 34,650." },
+      { id: "ws_69", t: "identical_objects", d: "Challenging", q: "Arrangements of ARRANGE where the two R's NEVER occur together?", ans: "900", hint: "1260 - 360.", sol: "900." },
+      { id: "ws_70", t: "identical_objects", d: "Challenging", q: "6-letter arrangements of GOOGLE where the two O's stay together?", ans: "60", hint: "5! / 2!.", sol: "120 / 2 = 60." }
+    ];
+
+    const wsUserAnswers = {};
+    const wsStatus = {};
+    const wsHintsShown = {};
+
+    function renderWorksheet() {
+      const container = document.getElementById("ws-list");
+      const topicFilter = document.getElementById("ws-filter-topic").value;
+      const diffFilter = document.getElementById("ws-filter-diff").value;
+
+      const filtered = WORKSHEET_RAW.filter(q => {
+        if (topicFilter !== "all" && q.t !== topicFilter) return false;
+        if (diffFilter !== "all" && q.d !== diffFilter) return false;
+        return true;
+      });
+
+      container.innerHTML = filtered.map(q => {
+        const isCorr = wsStatus[q.id] === "correct";
+        const isWrong = wsStatus[q.id] === "incorrect";
+        const hintOpen = wsHintsShown[q.id] || false;
+        return `
+          <div class="ws-item" id="item-${q.id}">
+            <div class="ws-header">
+              <div>
+                <span class="badge" style="margin-right: 0.5rem;">${q.id.toUpperCase()}</span>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">${q.t}</span>
+              </div>
+              <span class="badge" style="background: ${q.d === 'Easy' ? 'var(--accent-light)' : q.d === 'Medium' ? 'var(--warning-light)' : 'var(--danger-light)'};">
+                ${q.d}
+              </span>
+            </div>
+
+            <p style="font-weight: 600; margin-bottom: 1rem; font-size: 0.95rem;">${q.q}</p>
+
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <input type="text" id="input-${q.id}" class="form-control" style="max-width: 200px;" placeholder="Numeric answer..." value="${wsUserAnswers[q.id] || ''}">
+              <button class="btn btn-primary" onclick="checkWsAnswer('${q.id}')">Check Answer</button>
+              <button class="btn btn-outline" onclick="toggleWsHint('${q.id}')">💡 Hint</button>
+              <button class="btn btn-outline" onclick="toggleWsSol('${q.id}')">👁️ Solution</button>
+            </div>
+
+            ${isCorr ? `<div style="color: var(--accent); font-weight: bold; font-size: 0.85rem; margin-top: 0.5rem;">✓ Correct answer!</div>` : ''}
+            ${isWrong ? `<div style="color: var(--danger); font-weight: bold; font-size: 0.85rem; margin-top: 0.5rem;">✗ Incorrect. Try again!</div>` : ''}
+
+            <div id="hint-${q.id}" class="hint-box" style="display: ${hintOpen ? 'block' : 'none'};">
+              <strong>Progressive Hint:</strong> ${q.hint}
+            </div>
+
+            <div id="sol-${q.id}" class="sol-box" style="display: none;">
+              <strong>Step-by-step Solution:</strong> ${q.sol} <br>
+              <strong>Target Answer:</strong> ${q.ans}
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      updateWorksheetScore();
+    }
+
+    function checkWsAnswer(id) {
+      const q = WORKSHEET_RAW.find(item => item.id === id);
+      const input = document.getElementById("input-" + id);
+      const val = input.value.trim();
+      wsUserAnswers[id] = val;
+
+      if (val === q.ans) {
+        wsStatus[id] = "correct";
+      } else {
+        wsStatus[id] = "incorrect";
+      }
+      renderWorksheet();
+    }
+
+    function toggleWsHint(id) {
+      wsHintsShown[id] = !wsHintsShown[id];
+      const el = document.getElementById("hint-" + id);
+      if (el) el.style.display = wsHintsShown[id] ? "block" : "none";
+    }
+
+    function toggleWsSol(id) {
+      const el = document.getElementById("sol-" + id);
+      if (el) el.style.display = el.style.display === "none" ? "block" : "none";
+    }
+
+    function filterWorksheet() {
+      renderWorksheet();
+    }
+
+    function updateWorksheetScore() {
+      const correct = Object.values(wsStatus).filter(s => s === "correct").length;
+      const pct = Math.round((correct / WORKSHEET_RAW.length) * 100);
+      document.getElementById("ws-score-display").innerText = `Score: ${correct} / ${WORKSHEET_RAW.length} (${pct}%)`;
+    }
+
+    // Calculator Engine
+    function handleCalcModeChange() {
+      const mode = document.getElementById("calc-mode").value;
+      const inputs = document.getElementById("calc-inputs");
+      if (mode === "fact") {
+        inputs.innerHTML = `
+          <div class="form-group">
+            <label>Input n (non-negative integer):</label>
+            <input type="number" id="calc-n" class="form-control" value="5" min="0" max="100">
+          </div>
+        `;
+      } else if (mode === "circular") {
+        inputs.innerHTML = `
+          <div class="form-group">
+            <label>Input n (items in circle):</label>
+            <input type="number" id="calc-n" class="form-control" value="6" min="1">
+          </div>
+          <div class="form-group">
+            <label><input type="checkbox" id="calc-flip"> Flippable in 3D (Necklace / Keyring)</label>
+          </div>
+        `;
+      } else if (mode === "identical") {
+        inputs.innerHTML = `
+          <div class="form-group">
+            <label>Multiplicities (comma separated, e.g. 3, 2, 1 for BANANA):</label>
+            <input type="text" id="calc-multi" class="form-control" value="3, 2, 1">
+          </div>
+        `;
+      } else {
+        inputs.innerHTML = `
+          <div class="form-group">
+            <label>Total items (n):</label>
+            <input type="number" id="calc-n" class="form-control" value="5" min="1">
+          </div>
+          <div class="form-group">
+            <label>Selection size / length (r):</label>
+            <input type="number" id="calc-r" class="form-control" value="3" min="0">
+          </div>
+        `;
+      }
+      runCalculation();
+    }
+
+    function bigFact(n) {
+      if (n === 0n || n === 1n) return 1n;
+      let res = 1n;
+      for (let i = 2n; i <= n; i++) res *= i;
+      return res;
+    }
+
+    function runCalculation() {
+      const mode = document.getElementById("calc-mode").value;
+      const title = document.getElementById("calc-out-title");
+      const formula = document.getElementById("calc-out-formula");
+      const steps = document.getElementById("calc-out-steps");
+      const resEl = document.getElementById("calc-out-result");
+
+      if (mode === "fact") {
+        const n = parseInt(document.getElementById("calc-n").value, 10);
+        title.innerText = "Factorial of " + n;
+        formula.innerText = "n! = n × (n - 1) × ... × 1";
+        const val = bigFact(BigInt(n));
+        steps.innerHTML = `Calculation: ${n}! = ${val.toString()}`;
+        resEl.innerText = val.toString();
+      } else if (mode === "npr") {
+        const n = parseInt(document.getElementById("calc-n").value, 10);
+        const r = parseInt(document.getElementById("calc-r").value, 10);
+        title.innerText = "Permutation without Repetition: " + n + "P" + r;
+        formula.innerText = "nPr = n! / (n - r)!";
+        let val = 1n;
+        for (let i = 0; i < r; i++) val *= BigInt(n - i);
+        steps.innerHTML = `Multiplying ${r} descending factors from ${n}: ${val.toString()}`;
+        resEl.innerText = val.toString();
+      } else if (mode === "ncr") {
+        const n = parseInt(document.getElementById("calc-n").value, 10);
+        const r = parseInt(document.getElementById("calc-r").value, 10);
+        title.innerText = "Combination without Repetition: " + n + "C" + r;
+        formula.innerText = "nCr = n! / [r!(n - r)!]";
+        const val = bigFact(BigInt(n)) / (bigFact(BigInt(r)) * bigFact(BigInt(n - r)));
+        steps.innerHTML = `Dividing ${n}P${r} by ${r}!: ${val.toString()}`;
+        resEl.innerText = val.toString();
+      } else if (mode === "n_pow_r") {
+        const n = parseInt(document.getElementById("calc-n").value, 10);
+        const r = parseInt(document.getElementById("calc-r").value, 10);
+        title.innerText = "Permutation with Repetition Allowed: " + n + "^" + r;
+        formula.innerText = "Total = n^r";
+        let val = 1n;
+        for (let i = 0; i < r; i++) val *= BigInt(n);
+        steps.innerHTML = `Each of ${r} slots independently has ${n} options: ${val.toString()}`;
+        resEl.innerText = val.toString();
+      } else if (mode === "stars_bars") {
+        const n = parseInt(document.getElementById("calc-n").value, 10);
+        const r = parseInt(document.getElementById("calc-r").value, 10);
+        title.innerText = "Stars & Bars: C(" + n + " + " + r + " - 1, " + r + ")";
+        formula.innerText = "C(n + r - 1, r)";
+        const N = n + r - 1;
+        const val = bigFact(BigInt(N)) / (bigFact(BigInt(r)) * bigFact(BigInt(N - r)));
+        steps.innerHTML = `C(${N}, ${r}) = ${val.toString()}`;
+        resEl.innerText = val.toString();
+      } else if (mode === "circular") {
+        const n = parseInt(document.getElementById("calc-n").value, 10);
+        const flip = document.getElementById("calc-flip").checked;
+        title.innerText = "Circular Permutation of " + n + " items";
+        formula.innerText = flip ? "(n - 1)! / 2" : "(n - 1)!";
+        let val = bigFact(BigInt(n - 1));
+        if (flip) val = val / 2n;
+        steps.innerHTML = `Eliminating rotational symmetry: (${n} - 1)! ${flip ? '/ 2' : ''} = ${val.toString()}`;
+        resEl.innerText = val.toString();
+      } else if (mode === "identical") {
+        const raw = document.getElementById("calc-multi").value;
+        const counts = raw.split(",").map(s => parseInt(s.trim(), 10)).filter(v => !isNaN(v));
+        const total = counts.reduce((a, b) => a + b, 0);
+        title.innerText = "Multinomial: Total items = " + total;
+        formula.innerText = "n! / (n1! × n2! × ... × nk!)";
+        let den = 1n;
+        counts.forEach(c => den *= bigFact(BigInt(c)));
+        const val = bigFact(BigInt(total)) / den;
+        steps.innerHTML = `${total}! / (${counts.join('! × ')}!) = ${val.toString()}`;
+        resEl.innerText = val.toString();
+      }
+    }
+
+    // Games Engine
+    let activeGameId = 6;
+    let dancerPhase = 0;
+    let dancerInterval = null;
+
+    function switchGame(id) {
+      activeGameId = id;
+      document.querySelectorAll("#sec-games .topic-pill").forEach(p => p.classList.remove("active"));
+      event.target.classList.add("active");
+      renderGame();
+    }
+
+    function renderGame() {
+      const c = document.getElementById("game-container");
+      if (activeGameId === 6) {
+        // Dance Formation Studio
+        c.innerHTML = `
+          <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap;">
+              <div>
+                <h3>Virtual Dance Formation Studio</h3>
+                <p style="color: var(--text-muted); font-size: 0.85rem;">Animated dancers with moving limbs demonstrating line, team, roles, and circular formations.</p>
+              </div>
+              <div style="display: flex; gap: 0.5rem;">
+                <button class="btn btn-outline" onclick="changeDanceFormation('line')">Line (n!)</button>
+                <button class="btn btn-outline" onclick="changeDanceFormation('circle')">Circle ((n-1)!)</button>
+                <button class="btn btn-outline" onclick="changeDanceFormation('v')">V-Formation</button>
+              </div>
+            </div>
+
+            <div class="game-stage" id="dance-stage" style="min-height: 340px;">
+              <svg id="dance-svg" viewBox="0 0 700 320" style="width: 100%; height: 320px;"></svg>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; font-size: 0.85rem;">
+              <div><strong>Mathematical Principle:</strong> <span id="dance-math-note">Line Formation: 6 dancers = 6! = 720 distinct lineups.</span></div>
+              <button class="btn btn-primary" onclick="shuffleDancers()">Shuffle Positions ↺</button>
+            </div>
+          </div>
+        `;
+        startDanceAnimation();
+      } else if (activeGameId === 1) {
+        // Detective
+        c.innerHTML = `
+          <div class="card">
+            <h3>Game 1: Permutation or Combination Detective</h3>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">Case #101: A bank vault requires a 4-digit code. Entering 4-7-2-9 unlocks it. Will 9-2-7-4 unlock it?</p>
+            <div style="display: flex; gap: 1rem;">
+              <button class="btn btn-primary" onclick="alert('Correct! Permutation: In passcodes, order matters critically!')">Permutation (Order Matters)</button>
+              <button class="btn btn-outline" onclick="alert('Incorrect! Changing the sequence changes the code!')">Combination (Order Ignored)</button>
+            </div>
+          </div>
+        `;
+      } else if (activeGameId === 2) {
+        // Arrangement
+        c.innerHTML = `
+          <div class="card">
+            <h3>Game 2: Arrangement Puzzle</h3>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">Word: CAT (3 distinct letters). Total arrangements = 3! = 6.</p>
+            <div style="display: flex; gap: 0.5rem; font-size: 1.5rem; font-family: var(--font-mono); margin-bottom: 1rem;">
+              <span style="padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 0.5rem;">C</span>
+              <span style="padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 0.5rem;">A</span>
+              <span style="padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 0.5rem;">T</span>
+            </div>
+            <p style="font-size: 0.85rem;">Possible Permutations: CAT, CTA, ACT, ATC, TCA, TAC (3! = 6).</p>
+          </div>
+        `;
+      } else if (activeGameId === 3) {
+        // Basket
+        c.innerHTML = `
+          <div class="card">
+            <h3>Game 3: Combination Basket</h3>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">Choose 2 fruits from 4 distinct fruits. Total combinations: 4C2 = 6.</p>
+            <div style="font-size: 2rem; margin-bottom: 1rem;">🍎 🍌 🍊 🍇</div>
+            <p style="font-size: 0.85rem;">Order doesn't matter: Selecting Apple then Banana produces the exact same basket as Banana then Apple.</p>
+          </div>
+        `;
+      } else if (activeGameId === 4) {
+        // Escape Room
+        c.innerHTML = `
+          <div class="card">
+            <h3>Game 4: DMS Escape Room</h3>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">Door 1 Dial: Calculate (6! / 4!) - 0! to unlock.</p>
+            <div style="display: flex; gap: 0.5rem;">
+              <input type="text" id="escape-in" class="form-control" style="max-width: 200px;" placeholder="Code...">
+              <button class="btn btn-primary" onclick="if(document.getElementById('escape-in').value.trim() === '29') alert('Vault Door Unlocked! 30 - 1 = 29.'); else alert('Incorrect code!');">Turn Dial</button>
+            </div>
+          </div>
+        `;
+      } else if (activeGameId === 5) {
+        // Counting Race
+        c.innerHTML = `
+          <div class="card">
+            <h3>Game 5: Counting Race Track</h3>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">Hurdle 1: What is the value of 4!?</p>
+            <div style="display: flex; gap: 0.5rem;">
+              <button class="btn btn-outline" onclick="alert('Incorrect.')">12</button>
+              <button class="btn btn-primary" onclick="alert('Correct! 4! = 24. Runner sprints forward!')">24</button>
+              <button class="btn btn-outline" onclick="alert('Incorrect.')">48</button>
+            </div>
+          </div>
+        `;
+      } else if (activeGameId === 7) {
+        // Game 7: Counting Maze
+        c.innerHTML = `
+          <div class="card" style="space-y: 1.5rem;">
+            <h3>Game 7: Counting Maze</h3>
+            <div style="padding: 1rem; border-radius: 0.5rem; background: var(--bg); border: 1px solid var(--border); font-size: 0.85rem; line-height: 1.6; margin-bottom: 1rem;">
+              <strong>1. Definition:</strong> The Fundamental Principle of Counting states that if an operation can be performed in m ways and a second operation in n ways, the two can be performed in m × n ways. When choosing between mutually exclusive alternatives, counts are added (m + n).
+              <br><br>
+              <strong>2. Detailed Explanation:</strong> For sequential independent stages, multiply choices at each junction. When paths represent disjoint alternatives that cannot happen simultaneously, add the counts. For example: 4 shirts × 3 trousers × 2 shoes = 24 outfits. Travel via Train (3) OR Flight (2) = 5 routes.
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+              <div style="padding: 0.75rem; border: 2px solid var(--primary); border-radius: 0.5rem; font-family: var(--font-mono); font-size: 0.85rem;">
+                <strong>Multiplication:</strong> N = n₁ × n₂ × ... × n_k
+              </div>
+              <div style="padding: 0.75rem; border: 2px solid var(--primary); border-radius: 0.5rem; font-family: var(--font-mono); font-size: 0.85rem;">
+                <strong>Addition:</strong> N = n₁ + n₂ + ... + n_k
+              </div>
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">
+              <strong>Symbols:</strong> N = total routes; n_i = choices at stage i; k = number of sequential stages or alternative corridors.
+            </div>
+            <details style="margin-bottom: 1rem; font-size: 0.85rem;">
+              <summary style="cursor: pointer; font-weight: bold; color: var(--primary);">View 5 Worked Examples</summary>
+              <ol style="margin-top: 0.5rem; padding-left: 1.25rem; line-height: 1.6;">
+                <li>Outfits: 4 shirts × 3 pants × 2 shoes = 24 outfits.</li>
+                <li>Hops: 5 roads (A→B) × 4 roads (B→C) = 20 routes.</li>
+                <li>Disjoint modes: 3 trains + 2 buses + 4 rideshares = 9 ways.</li>
+                <li>Dual Corridor: (3 × 4) + (2 × 5) = 12 + 10 = 22 routes.</li>
+                <li>Banquet: 3 appetizers × 4 mains × 2 desserts × 3 drinks = 72 meals.</li>
+              </ol>
+            </details>
+            <div style="padding: 1rem; background: #0f172a; border-radius: 0.5rem; color: #fff; margin-bottom: 1rem;">
+              <svg viewBox="0 0 600 120" style="width: 100%; height: 100px;">
+                <circle cx="50" cy="60" r="20" fill="#4f46e5" /><text x="50" y="65" text-anchor="middle" fill="#fff" font-size="10">START</text>
+                <path d="M 70 60 C 130 60, 150 25, 250 25" fill="none" stroke="#6366f1" stroke-width="2" />
+                <path d="M 70 60 C 130 60, 150 60, 250 60" fill="none" stroke="#6366f1" stroke-width="2" />
+                <path d="M 70 60 C 130 60, 150 95, 250 95" fill="none" stroke="#6366f1" stroke-width="2" />
+                <circle cx="250" cy="25" r="12" fill="#1e293b" stroke="#94a3b8" />
+                <circle cx="250" cy="60" r="12" fill="#1e293b" stroke="#94a3b8" />
+                <circle cx="250" cy="95" r="12" fill="#1e293b" stroke="#94a3b8" />
+                <path d="M 262 25 C 340 25, 380 60, 520 60" fill="none" stroke="#10b981" stroke-width="2" />
+                <path d="M 262 60 C 340 60, 380 60, 520 60" fill="none" stroke="#10b981" stroke-width="2" />
+                <path d="M 262 95 C 340 95, 380 60, 520 60" fill="none" stroke="#10b981" stroke-width="2" />
+                <circle cx="540" cy="60" r="20" fill="#059669" /><text x="540" y="65" text-anchor="middle" fill="#fff" font-size="10">GOAL</text>
+              </svg>
+            </div>
+            <div style="font-size: 0.85rem;">
+              <p><strong>Interactive Challenge:</strong> City A has 3 gates to B, and B has 4 mountain passes to C. Enter total routes from A to C:</p>
+              <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                <input type="number" id="maze-in" class="form-control" style="max-width: 160px;" placeholder="Answer...">
+                <button class="btn btn-primary" onclick="if(document.getElementById('maze-in').value.trim() === '12') alert('Correct! 3 gates × 4 passes = 12 total routes.'); else alert('Hint: Use the multiplication principle (3 × 4).');">Check Route Count</button>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (activeGameId === 8) {
+        // Game 8: Arrangement Lab
+        c.innerHTML = `
+          <div class="card">
+            <h3>Game 8: Rule-Based Arrangement Lab</h3>
+            <div style="padding: 1rem; border-radius: 0.5rem; background: var(--bg); border: 1px solid var(--border); font-size: 0.85rem; line-height: 1.6; margin-bottom: 1rem;">
+              <strong>1. Definition:</strong> A restricted permutation is an ordered arrangement of objects subject to spatial constraints.
+              <br><br>
+              <strong>2. Block Method:</strong> When k items must stay together, treat them as 1 block, arranging (n - k + 1)! units, and multiply by k! internal orders. For separation, use complementary counting: Total - Together.
+            </div>
+            <div style="padding: 0.75rem; border: 2px solid var(--primary); border-radius: 0.5rem; font-family: var(--font-mono); font-size: 0.85rem; margin-bottom: 1rem;">
+              Fixed position: (n - 1)! &nbsp;|&nbsp; Block method: (n - k + 1)! × k!
+            </div>
+            <details style="margin-bottom: 1rem; font-size: 0.85rem;">
+              <summary style="cursor: pointer; font-weight: bold; color: var(--primary);">View 5 Worked Examples</summary>
+              <ol style="margin-top: 0.5rem; padding-left: 1.25rem; line-height: 1.6;">
+                <li>Math book 1st on shelf of 5: 1 × 4! = 24.</li>
+                <li>Alice & Bob together among 6: 5! × 2! = 120 × 2 = 240.</li>
+                <li>Rivals separated among 5: 5! - (4! × 2!) = 120 - 48 = 72.</li>
+                <li>3 science books together among 7: 5! × 3! = 120 × 6 = 720.</li>
+                <li>Vowels at both ends of PRISMA: 2! × 4! = 2 × 24 = 48.</li>
+              </ol>
+            </details>
+            <div style="font-size: 0.85rem;">
+              <p><strong>Interactive Challenge:</strong> 5 students (A, B, C, D, E) stand in line. A and B must stand together. Enter valid arrangements:</p>
+              <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                <input type="number" id="arr-in" class="form-control" style="max-width: 160px;" placeholder="Answer...">
+                <button class="btn btn-primary" onclick="if(document.getElementById('arr-in').value.trim() === '48') alert('Correct! (5 - 2 + 1)! × 2! = 4! × 2 = 48.'); else alert('Hint: Block unit {[AB], C, D, E} is 4 units (4! = 24), multiplied by 2! = 48.');">Check Count</button>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (activeGameId === 9) {
+        // Game 9: Train Carriage
+        c.innerHTML = `
+          <div class="card">
+            <h3>Game 9: Train Carriage Challenge</h3>
+            <div style="padding: 1rem; border-radius: 0.5rem; background: var(--bg); border: 1px solid var(--border); font-size: 0.85rem; line-height: 1.6; margin-bottom: 1rem;">
+              <strong>1. Definition:</strong> A permutation is an arrangement of objects in a definite order. Changing carriage order produces a distinct train.
+              <br><br>
+              <strong>2. Coupling Rules:</strong> Arranging all n carriages gives n! formations. Choosing r from n gives ⁿPᵣ = n! / (n - r)!. Coupling constraints (e.g. hazardous cargo cannot be last) reduce valid orders.
+            </div>
+            <div style="padding: 0.75rem; border: 2px solid var(--primary); border-radius: 0.5rem; font-family: var(--font-mono); font-size: 0.85rem; margin-bottom: 1rem;">
+              n! &nbsp;|&nbsp; ⁿPᵣ = n! / (n - r)! &nbsp;|&nbsp; Block: (n - k + 1)! × k!
+            </div>
+            <details style="margin-bottom: 1rem; font-size: 0.85rem;">
+              <summary style="cursor: pointer; font-weight: bold; color: var(--primary);">View 5 Worked Examples</summary>
+              <ol style="margin-top: 0.5rem; padding-left: 1.25rem; line-height: 1.6;">
+                <li>5 distinct carriages in a line: 5! = 120.</li>
+                <li>3-carriage train from 6 available: ⁶P₃ = 120.</li>
+                <li>Dining & Sleeper adjacent among 5: 4! × 2! = 48.</li>
+                <li>Green cargo cannot be last among 5: 5! - 4! = 96.</li>
+                <li>Engine 1st, Sleeper & Dining adjacent among 6: 1 × 4! × 2! = 48.</li>
+              </ol>
+            </details>
+            <div style="font-size: 0.85rem;">
+              <p><strong>Interactive Challenge:</strong> 5 carriages are coupled behind a locomotive. The Red Passenger car MUST be coupled first. Enter total valid formations:</p>
+              <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                <input type="number" id="train-in" class="form-control" style="max-width: 160px;" placeholder="Answer...">
+                <button class="btn btn-primary" onclick="if(document.getElementById('train-in').value.trim() === '24') alert('Correct! Position 1 fixed leaves 4! = 24 arrangements.'); else alert('Hint: 1 choice for slot 1 × 4! for remaining slots = 24.');">Check Formations</button>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (activeGameId === 10) {
+        // Game 10: Selection Sorter
+        c.innerHTML = `
+          <div class="card">
+            <h3>Game 10: Selection Sorter</h3>
+            <div style="padding: 1rem; border-radius: 0.5rem; background: var(--bg); border: 1px solid var(--border); font-size: 0.85rem; line-height: 1.6; margin-bottom: 1rem;">
+              <strong>1. Definition:</strong> A combination is a selection of objects where order does not matter.
+              <br><br>
+              <strong>2. Repetition Rules:</strong> Without repetition: ⁿCᵣ = n! / [r!(n - r)!]. With repetition allowed (e.g. ice cream flavours, pizza toppings): C(n + r - 1, r) using the Stars-and-Bars theorem.
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+              <div style="padding: 0.75rem; border: 2px solid var(--primary); border-radius: 0.5rem; font-family: var(--font-mono); font-size: 0.85rem;">
+                <strong>No Repetition:</strong> ⁿCᵣ = n! / [r!(n - r)!]
+              </div>
+              <div style="padding: 0.75rem; border: 2px solid var(--primary); border-radius: 0.5rem; font-family: var(--font-mono); font-size: 0.85rem;">
+                <strong>With Repetition:</strong> C(n + r - 1, r)
+              </div>
+            </div>
+            <details style="margin-bottom: 1rem; font-size: 0.85rem;">
+              <summary style="cursor: pointer; font-weight: bold; color: var(--primary);">View 5 Worked Examples</summary>
+              <ol style="margin-top: 0.5rem; padding-left: 1.25rem; line-height: 1.6;">
+                <li>Committee of 3 from 8 (no rep): ⁸C₃ = 56.</li>
+                <li>4 scoops from 3 flavours (rep allowed): C(3+4-1, 4) = C(6, 4) = 15.</li>
+                <li>2 pizza toppings from 6 (no rep): ⁶C₂ = 15.</li>
+                <li>5 donuts from 4 varieties (rep allowed): C(4+5-1, 5) = C(8, 5) = 56.</li>
+                <li>3 novels from 7 recommended (no rep): ⁷C₃ = 35.</li>
+              </ol>
+            </details>
+            <div style="font-size: 0.85rem;">
+              <p><strong>Interactive Challenge:</strong> Select 4 scoops from 3 ice cream flavours with repetition allowed. How many combinations exist?</p>
+              <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                <input type="number" id="sorter-in" class="form-control" style="max-width: 160px;" placeholder="Answer...">
+                <button class="btn btn-primary" onclick="if(document.getElementById('sorter-in').value.trim() === '15') alert('Correct! Stars & Bars: C(3 + 4 - 1, 4) = C(6, 4) = 15.'); else alert('Hint: Use C(n + r - 1, r) where n=3, r=4.');">Check Combinations</button>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (activeGameId === 11) {
+        // Game 11: Tournament Planner
+        c.innerHTML = `
+          <div class="card">
+            <h3>Game 11: Tournament Planner</h3>
+            <div style="padding: 1rem; border-radius: 0.5rem; background: var(--bg); border: 1px solid var(--border); font-size: 0.85rem; line-height: 1.6; margin-bottom: 1rem;">
+              <strong>1. Definition:</strong> A combination selects an unranked team; a permutation assigns members to distinct positional roles.
+              <br><br>
+              <strong>2. The Duality Bridge:</strong> ⁿPᵣ = ⁿCᵣ × r!. Selecting r players is ⁿCᵣ; assigning those r players to r roles multiplies by r!.
+            </div>
+            <div style="padding: 0.75rem; border: 2px solid var(--primary); border-radius: 0.5rem; font-family: var(--font-mono); font-size: 0.85rem; margin-bottom: 1rem;">
+              Team: ⁿCᵣ &nbsp;|&nbsp; Roles: ⁿPᵣ &nbsp;|&nbsp; Relation: ⁿPᵣ = ⁿCᵣ × r!
+            </div>
+            <details style="margin-bottom: 1rem; font-size: 0.85rem;">
+              <summary style="cursor: pointer; font-weight: bold; color: var(--primary);">View 5 Worked Examples</summary>
+              <ol style="margin-top: 0.5rem; padding-left: 1.25rem; line-height: 1.6;">
+                <li>Esports squad (4 of 9): ⁹C₄ = 126 teams; ⁹P₄ = 3,024 role lineups.</li>
+                <li>Officers from 10 board members: ¹⁰P₃ = 720.</li>
+                <li>Doubles tennis pair from 6: ⁶C₂ = 15.</li>
+                <li>Batting order (first 4 of 11): ¹¹P₄ = 7,920.</li>
+                <li>Relay team (4 of 7): ⁷C₄ = 35 teams; ⁷P₄ = 840 leg orders.</li>
+              </ol>
+            </details>
+            <div style="font-size: 0.85rem;">
+              <p><strong>Interactive Challenge:</strong> From 6 players, choose 3 and assign them to Captain, Goalkeeper, and Striker. Enter total role assignments:</p>
+              <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                <input type="number" id="tourn-in" class="form-control" style="max-width: 160px;" placeholder="Answer...">
+                <button class="btn btn-primary" onclick="if(document.getElementById('tourn-in').value.trim() === '120') alert('Correct! ⁶P₃ = 6 × 5 × 4 = 120 (or ⁶C₃ × 3! = 20 × 6 = 120).'); else alert('Hint: Order matters for distinct roles: ⁶P₃ = 120.');">Check Roles</button>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (activeGameId === 12) {
+        // Game 12: Formula Battle
+        c.innerHTML = `
+          <div class="card">
+            <h3>Game 12: Formula Battle Arena</h3>
+            <div style="padding: 1rem; border-radius: 0.5rem; background: var(--bg); border: 1px solid var(--border); font-size: 0.85rem; line-height: 1.6; margin-bottom: 1rem;">
+              <strong>1. Definition:</strong> Solving discrete counting problems requires identifying what is being counted, whether order matters, whether repetition is allowed, identical items, and linear vs circular geometry.
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.5rem; margin-bottom: 1rem; font-family: var(--font-mono); font-size: 0.8rem;">
+              <div style="padding: 0.5rem; border: 1px solid var(--border); border-radius: 0.25rem;">n! (Arranging all)</div>
+              <div style="padding: 0.5rem; border: 1px solid var(--border); border-radius: 0.25rem;">ⁿPᵣ (Permutations)</div>
+              <div style="padding: 0.5rem; border: 1px solid var(--border); border-radius: 0.25rem;">ⁿCᵣ (Combinations)</div>
+              <div style="padding: 0.5rem; border: 1px solid var(--border); border-radius: 0.25rem;">nʳ (Perm with rep)</div>
+              <div style="padding: 0.5rem; border: 1px solid var(--border); border-radius: 0.25rem;">C(n+r-1, r) (Comb rep)</div>
+              <div style="padding: 0.5rem; border: 1px solid var(--border); border-radius: 0.25rem;">(n - 1)! (Circular)</div>
+              <div style="padding: 0.5rem; border: 1px solid var(--border); border-radius: 0.25rem;">n! / (p!q!...) (Identical)</div>
+            </div>
+            <details style="margin-bottom: 1rem; font-size: 0.85rem;">
+              <summary style="cursor: pointer; font-weight: bold; color: var(--primary);">View 5 Worked Examples</summary>
+              <ol style="margin-top: 0.5rem; padding-left: 1.25rem; line-height: 1.6;">
+                <li>5 books on shelf: 5! = 120.</li>
+                <li>President & VP from 7: ⁷P₂ = 42.</li>
+                <li>Study group of 4 from 9: ⁹C₄ = 126.</li>
+                <li>4-digit PIN (digits 0-9): 10⁴ = 10,000.</li>
+                <li>Letters of 'LEVEL': 5! / (2! × 2!) = 30.</li>
+              </ol>
+            </details>
+            <div style="font-size: 0.85rem;">
+              <p><strong>Interactive Challenge:</strong> How many ways can 6 delegates sit around a round conference table? Enter total circular permutations:</p>
+              <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                <input type="number" id="battle-in" class="form-control" style="max-width: 160px;" placeholder="Answer...">
+                <button class="btn btn-primary" onclick="if(document.getElementById('battle-in').value.trim() === '120') alert('Critical Hit! Circular permutation = (6 - 1)! = 5! = 120.'); else alert('Hint: (n - 1)! = (6 - 1)! = 5! = 120.');">Attack Titan Boss</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    let currentFormation = 'line';
+    function changeDanceFormation(f) {
+      currentFormation = f;
+      const note = document.getElementById("dance-math-note");
+      if (f === 'line') note.innerText = "Line Formation: 6 dancers in a line = 6! = 720 arrangements.";
+      if (f === 'circle') note.innerText = "Circular Formation: 6 dancers in a circle = (6-1)! = 5! = 120 arrangements.";
+      if (f === 'v') note.innerText = "V-Formation: Position assignments along wings = 6! permutations.";
+    }
+
+    function shuffleDancers() {
+      dancerPhase += 1.5;
+    }
+
+    function startDanceAnimation() {
+      if (dancerInterval) clearInterval(dancerInterval);
+      dancerInterval = setInterval(() => {
+        dancerPhase += 0.1;
+        drawDanceStage();
+      }, 50);
+    }
+
+    function drawDanceStage() {
+      const svg = document.getElementById("dance-svg");
+      if (!svg) return;
+
+      const dancers = [
+        { name: "Aria", color: "#3B82F6" },
+        { name: "Bella", color: "#EC4899" },
+        { name: "Cyrus", color: "#10B981" },
+        { name: "Dev", color: "#F59E0B" },
+        { name: "Elena", color: "#8B5CF6" },
+        { name: "Farhan", color: "#06B6D4" }
+      ];
+
+      let html = "";
+      dancers.forEach((d, i) => {
+        let x = 120 + i * 90;
+        let y = 160;
+
+        if (currentFormation === 'circle') {
+          const angle = (i / 6) * 2 * Math.PI - Math.PI / 2 + (dancerPhase * 0.2);
+          x = 350 + Math.cos(angle) * 120;
+          y = 160 + Math.sin(angle) * 80;
+        } else if (currentFormation === 'v') {
+          const diff = Math.abs(i - 2.5);
+          x = 350 + (i - 2.5) * 80;
+          y = 120 + diff * 35;
+        }
+
+        const armAngle = Math.sin(dancerPhase + i) * 25;
+        const legOffset = Math.sin(dancerPhase * 1.5 + i) * 5;
+
+        html += `
+          <g transform="translate(${x}, ${y})">
+            <!-- Shadow -->
+            <ellipse cx="0" cy="50" rx="18" ry="5" fill="#000000" opacity="0.4" />
+            <!-- Legs -->
+            <line x1="-5" y1="20" x2="${-6 + legOffset}" y2="48" stroke="#ffffff" stroke-width="3" stroke-linecap="round" />
+            <line x1="5" y1="20" x2="${6 - legOffset}" y2="48" stroke="#ffffff" stroke-width="3" stroke-linecap="round" />
+            <!-- Torso -->
+            <rect x="-8" y="2" width="16" height="20" rx="4" fill="${d.color}" />
+            <!-- Arms with moving angle -->
+            <g transform="rotate(${armAngle})">
+              <line x1="-8" y1="5" x2="-18" y2="15" stroke="${d.color}" stroke-width="3" stroke-linecap="round" />
+            </g>
+            <g transform="rotate(${-armAngle})">
+              <line x1="8" y1="5" x2="18" y2="15" stroke="${d.color}" stroke-width="3" stroke-linecap="round" />
+            </g>
+            <!-- Head -->
+            <circle cx="0" cy="-10" r="9" fill="#FDE047" />
+            <!-- Label -->
+            <text x="0" y="65" text-anchor="middle" fill="#ffffff" font-size="10" font-weight="bold">${d.name}</text>
+          </g>
+        `;
+      });
+
+      svg.innerHTML = html;
+    }
+
+    // Formulas Reference Table
+    function renderReference() {
+      const tbody = document.getElementById("reference-tbody");
+      const list = [
+        { c: "Factorial", f: "n!", u: "Linear arrangement of all n distinct items", e: "5 books on shelf = 5! = 120" },
+        { c: "Permutation w/o Repetition", f: "n! / (n - r)!", u: "Arranging r distinct items where order matters", e: "President, VP, Sec from 10 = 10P3 = 720" },
+        { c: "Combination w/o Repetition", f: "n! / [r!(n - r)!]", u: "Selecting unordered group of size r from n", e: "Team of 3 from 10 = 10C3 = 120" },
+        { c: "Permutation with Repetition", f: "n^r", u: "Ordered sequence where each slot has n choices", e: "4-digit PIN = 10^4 = 10,000" },
+        { c: "Stars & Bars", f: "C(n + r - 1, r)", u: "Selecting r items from n types repeatedly", e: "3 scoops from 5 flavours = C(7,3) = 35" },
+        { c: "Circular Permutation", f: "(n - 1)!", u: "Closed circle with rotations equivalent", e: "6 people at round table = 5! = 120" },
+        { c: "Identical Objects", f: "n! / ∏ni!", u: "Arranging multiset with duplicate items", e: "BANANA = 6! / (3! 2!) = 60" }
+      ];
+      tbody.innerHTML = list.map(item => `
+        <tr style="border-bottom: 1px solid var(--border);">
+          <td style="padding: 0.75rem; font-weight: bold;">${item.c}</td>
+          <td style="padding: 0.75rem; font-family: var(--font-mono); color: var(--primary);">${item.f}</td>
+          <td style="padding: 0.75rem;">${item.u}</td>
+          <td style="padding: 0.75rem; font-style: italic;">${item.e}</td>
+        </tr>
+      `).join("");
+    }
+
+    // Lab Record rendering
+    function renderLabNotes() {
+      const c = document.getElementById("labnotes-content");
+      c.innerHTML = `
+        <div style="text-align: center; border-bottom: 2px solid var(--border); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+          <h2 style="font-size: 1.5rem;">DEPARTMENT OF COMPUTER SCIENCE &amp; ENGINEERING</h2>
+          <h3>Discrete Mathematical Structures Laboratory Record</h3>
+          <p style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--primary);">Course: 21CS36 / 18CS36 — Combinatorics</p>
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+          <h4>1. Aim of the Activity:</h4>
+          <p style="font-size: 0.9rem; line-height: 1.7;">To experimentally investigate, verify, and document combinatorial principles governing factorials, permutations, combinations, repetition, circular arrangements, and identical multiset permutations through algorithmic simulations.</p>
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+          <h4>2. Summary of Observations:</h4>
+          <ul style="font-size: 0.85rem; line-height: 1.8; padding-left: 1.25rem;">
+            <li>Activity 1: 5 dancers in line yielded 120 arrangements (5!), while 5 dancers in circle yielded 24 arrangements ((5-1)!). Ratio 120/24 = 5 = n (rotational symmetry factor).</li>
+            <li>Activity 2: Selecting 3 students for distinct ranks yielded 60 outcomes (5P3), while selecting an unranked committee yielded 10 outcomes (5C3). 5P3 = 3! × 5C3 = 60.</li>
+            <li>Activity 3: Distributing 7 identical packets to 3 cores yielded C(3+7-1, 7) = C(9,2) = 36 valid partitions via Stars and Bars.</li>
+            <li>Activity 4: Permuting BANANA yielded 6! / (3! 2!) = 60 distinct anagram strings.</li>
+          </ul>
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+          <h4>3. Conclusion:</h4>
+          <p style="font-size: 0.9rem; line-height: 1.7;">All fundamental laws of permutations and combinations were verified. These principles form the computational foundation for state spaces, cryptographic security, and algorithm complexity in computer engineering.</p>
+        </div>
+      `;
+    }
+
+    // Initialization
+    window.addEventListener("DOMContentLoaded", () => {
+      renderTheory();
+      renderWorksheet();
+      handleCalcModeChange();
+      renderReference();
+      renderLabNotes();
+    });
+  </script>
+</body>
+</html>

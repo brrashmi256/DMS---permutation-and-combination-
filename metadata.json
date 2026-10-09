@@ -1,0 +1,6 @@
+{
+  "name": "DMS Permutations & Combinations",
+  "description": "Comprehensive interactive learning portal, 70-question worksheet, calculators, and 6 animated games for 2nd-year B.E. Discrete Mathematical Structures.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
