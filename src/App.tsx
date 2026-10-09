@@ -178,13 +178,6 @@ export default function App() {
             >
               Observation Notes
             </button>
-            <a
-              href="/DMS_Permutations_Combinations.html"
-              download="DMS_Permutations_Combinations.html"
-              className="text-indigo-600 dark:text-indigo-400 font-semibold hover:underline"
-            >
-              Download Standalone HTML
-            </a>
           </div>
         </div>
       </footer>
