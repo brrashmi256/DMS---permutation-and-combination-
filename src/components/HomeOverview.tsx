@@ -1,5 +1,5 @@
 import React from "react";
-import { BookOpen, CheckSquare, Calculator, Gamepad2, FileText, ArrowRight, BarChart3, CheckCircle2, Download } from "lucide-react";
+import { BookOpen, CheckSquare, Calculator, Gamepad2, FileText, ArrowRight, BarChart3, CheckCircle2 } from "lucide-react";
 import { THEORY_TOPICS } from "../data/theoryData";
 
 interface HomeOverviewProps {
@@ -63,14 +63,6 @@ export const HomeOverview: React.FC<HomeOverviewProps> = ({
               <Gamepad2 className="w-4 h-4 text-indigo-400" />
               12 Animated Games
             </button>
-            <a
-              href="/DMS_Permutations_Combinations.html"
-              download="DMS_Permutations_Combinations.html"
-              className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-indigo-950/80 hover:bg-indigo-900 text-indigo-200 font-semibold text-sm border border-indigo-700 transition-colors"
-            >
-              <Download className="w-4 h-4 text-indigo-300" />
-              Download Offline HTML
-            </a>
           </div>
         </div>
 
